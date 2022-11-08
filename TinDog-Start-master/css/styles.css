@@ -17,6 +17,14 @@ h1{
     font-weight: bold;
 }
 
+h3{
+    font-weight: bold;
+}
+
+p{
+    color: #8f8f8f;
+}
+
 /* navbar */
 .navbar{
     padding: 0 0 4.5rem;
@@ -49,19 +57,20 @@ h1{
 
 /* features */
 #features{
+    padding: 7% 15%;
+}
+
+.feature-box{
     text-align: center;
-    font-family: 'Montserrat';
+    padding: 5%;
 }
 
-.fa-solid{
+.icon{
     color: #ef8172;
+    margin-bottom: 1rem;
 }
 
-#features h3{
-    font-weight: bolder;
-    font-size: 1.5rem;
+.icon:hover{
+    color: #ff4c68;
 }
 
-#features p{
-    color: #8f8f8f;
-}
