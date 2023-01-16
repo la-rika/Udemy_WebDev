@@ -1,5 +1,6 @@
 body{
     font-family: 'Montserrat', sans-serif;
+    font-weight: 100;
 }
 
 #title{
@@ -14,12 +15,12 @@ body{
 h1{
     font-size: 3.5rem;
     line-height: 1.5;
-    font-weight: bold;
+    font-weight: 900;
 }
 
 h2{
     font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
+    font-weight: 900;
     font-size: 3rem;
     line-height: 1.5;
 }
@@ -30,6 +31,11 @@ h3{
 
 p{
     color: #8f8f8f;
+    font-weight: 100;
+}
+
+i{
+    padding: 0 5px;
 }
 
 /* navbar */
@@ -58,10 +64,10 @@ p{
 
 /* title image */
 .title-image{
-    width: 18%;
+    width: 20%;
     transform: rotate(25deg);
     position: absolute;
-    right: 30%;
+    right: 20%;
 }
 
 /* features */
@@ -124,6 +130,26 @@ p{
 .pricing-column{
     padding: 3% 2%;
 }
+
+/* call to action */
+#cta{
+    background-color: #ff4c68;
+    padding: 5% 15%;
+    text-align: center;
+    color: #fff;
+}
+
+/* footer */
+#footer{
+    padding:7% 5% 0;
+    text-align: center;
+}
+
+.social-icon{
+    padding: 20px 7px;
+}
+
+
 
 /*media queries*/
 @media  (max-width:1028px) {
