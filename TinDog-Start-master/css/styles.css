@@ -35,15 +35,21 @@ i{
     padding: 7% 15% ;
 }
 
-/*Title section*/
-#title{
+/* Sections */
+.colored-section{
     background-color: #FF4C68;
     color: white;
-    text-align: left;
 }
 
+.white-section{
+    background-color: #fff;
+}
+
+
+/*Title section*/
 #title .container-fluid{
-    padding: 3%15% 7%
+    padding: 3% 15% 7%
+    text-align: left;
 }
 
 
@@ -74,7 +80,7 @@ i{
 
 /* title image */
 .title-image{
-    width: 15%;
+    width: 18%;
     transform: rotate(25deg);
     position: absolute;
     right: 20%;
@@ -86,8 +92,6 @@ i{
 }
 
 #features{
-
-    background-color: white;
     width: 100%;
     position: relative;
 }
@@ -147,12 +151,6 @@ i{
     padding: 3% 2%;
 }
 
-/* call to action */
-#cta{
-    background-color: #ff4c68;
-    padding: 5% 15%;
-    color: #fff;
-}
 
 
 /* footer */
