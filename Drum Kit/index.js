@@ -3,11 +3,25 @@ var numberOfButtons = document.querySelectorAll(".drum");
 
 for (var i = 0; i <= numberOfButtons.length; i++) {
 
+    //detecting inner html letter
     document.querySelectorAll(".drum")[i].addEventListener("click", function(){
 
         var buttonInnerHtml = this.innerHTML;
+        makeSound(buttonInnerHtml);
+        buttonAnimation(buttonInnerHtml);
+        
+    });
 
-        switch (buttonInnerHtml) {
+    //detecting pressed key on the keyboard
+    document.addEventListener("keydown", function(Event){
+
+        makeSound(Event.key);
+        buttonAnimation(Event.key);
+        
+    });
+
+    function makeSound(key){
+        switch (key) {
             case "w":
                 var audio = new Audio("sounds/tom-1.mp3");
                 audio.play();
@@ -40,8 +54,17 @@ for (var i = 0; i <= numberOfButtons.length; i++) {
                 console.log(buttonInnerHtml)
                 break;
         }
+    }
 
-    });
+    function buttonAnimation(key){
 
+        var activeButton = document.querySelector('.'+key);
+        activeButton.classList.add('pressed');
+
+        setTimeout(function(){
+            activeButton.classList.remove('pressed');
+        },100);
+
+    }
 
 }
