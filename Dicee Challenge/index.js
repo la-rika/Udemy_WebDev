@@ -1,9 +1,7 @@
 
 //creating a random numer from 1 to 6
-var randomNumer1 = Math.random();
-randomNumer1 = (randomNumer1 * 6) + 1;
 //rounding that number, we want a single digit number (1,2,3,4,5,6)
-randomNumer1 = Math.floor(randomNumer1);
+var randomNumer1 = Math.floor(Math.random() * 6) + 1;
 
 //Uding the random number to set te src of the image
 document.querySelector(".img1").setAttribute("src","images/dice"+randomNumer1+".png");
