@@ -1,69 +1,102 @@
 
-//I create the array with the colors of the buttons
-var buttonColours = ["red", "blue", "green","yellow"]; 
+var buttonColours = ["red", "blue", "green", "yellow"];
 
-//I create the array with the color path of the game
 var gamePattern = [];
-
-//I create the array of the path chose by the user by clicking
 var userClickedPattern = [];
 
-//button click event listener
-$(".btn").click(function(){
+//You'll need a way to keep track of whether if the game has started or not, so you only call nextSequence() on the first keypress.
+var started = false;
 
-    //I store in a var the id of the button clicked
+//2. Create a new variable called level and start at level 0.
+var level = 0;
+
+//1. Use jQuery to detect when a keyboard key has been pressed, when that happens for the first time, call nextSequence().
+$(document).keypress(function () {
+    if (!started) {
+
+        //3. The h1 title starts out saying "Press A Key to Start", when the game has started, change this to say "Level 0".
+        $("#level-title").text("Level " + level);
+        nextSequence();
+        started = true;
+    }
+});
+
+$(".btn").click(function () {
+
     var userChosenColour = $(this).attr("id");
-
-    //I put the button's id in the array with the path chose by the user
     userClickedPattern.push(userChosenColour);
 
     playSound(userChosenColour);
-
     animatePress(userChosenColour);
-    //console.log(userClickedPattern);
+
+    console.log(userClickedPattern);
+
+    checkAnswer(userClickedPattern.length - 1);
 
 });
 
+function nextSequence() {
 
-function nextSequence(){
+    userClickedPattern = [];
 
-    //I create a random number from 0 to 3
-    var randomNumber = Math.floor(Math.random()*4);
+    //4. Inside nextSequence(), increase the level by 1 every time nextSequence() is called.
+    level++;
 
-    //I take the element in the random number position from the array button colors
-    var randomChosenColour =  buttonColours[randomNumber];
+    //5. Inside nextSequence(), update the h1 with this change in the value of level.
+    $("#level-title").text("Level " + level);
 
-    //I put in the game path array the color chosen by random number
+    var randomNumber = Math.floor(Math.random() * 4);
+    var randomChosenColour = buttonColours[randomNumber];
     gamePattern.push(randomChosenColour);
 
-    //Flash effect
-    $("#"+randomChosenColour).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
-
+    $("#" + randomChosenColour).fadeIn(100).fadeOut(100).fadeIn(100);
     playSound(randomChosenColour);
 
+    console.log(gamePattern)
 }
 
-
-//Reusable playsound function
-function playSound(name){
-
-        //Audio activation based on the color
-        var audio = new Audio("sounds/" + name + ".mp3");
-        audio.play();
-
+function playSound(name) {
+    var audio = new Audio("sounds/" + name + ".mp3");
+    audio.play();
 }
 
-
-function animatePress(currentColour){
-
-    $("#"+currentColour).addClass("pressed");
-
-    setTimeout(() => {
-        
-        $("#"+currentColour).removeClass("pressed");
-
+function animatePress(currentColor) {
+    $("#" + currentColor).addClass("pressed");
+    setTimeout(function () {
+        $("#" + currentColor).removeClass("pressed");
     }, 100);
+}
+
+function checkAnswer(currentLevel) {
+
+    if ( gamePattern[currentLevel] === userClickedPattern[currentLevel]) {
+        console.log("success");
+
+        if (userClickedPattern.length === gamePattern.length) {
+
+            setTimeout(function () {
+                nextSequence();
+            }, 1000);
+
+        }
+    }
+    else {
+        console.log("wrong");
+        playSound("wrong");
+        $("body").addClass("game-over");
+        setTimeout(() => {  
+            $("body").removeClass("game-over");
+        }, 200);
+        $("#level-title").text("Game Over, Press Any Key to Restart");
+        startOver();
+    }
 
 }
 
-nextSequence();
+function startOver(){
+
+    level = 0;
+    gamePattern = [];
+    started = false;
+
+}
