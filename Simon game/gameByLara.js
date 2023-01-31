@@ -18,39 +18,40 @@ function nextSequence() {
 
     level++;
     userChoice = [];
-    $("#level-title").text("Level "+level);
-    console.log("level "+level);
+    $("#level-title").text("Level " + level);
     var randomNumber = Math.floor(Math.random() * 4);
     var randomColour = colours[randomNumber];
     gameChoice.push(randomColour);
-    console.log(gameChoice);
-    
+    console.log(randomColour);
+    sound(randomColour);
+
     $("#" + randomColour).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
 
 }
 
-function animatePress(colour){
+function animatePress(colour) {
 
-    $("#"+colour).addClass("pressed");
+    $("#" + colour).addClass("pressed");
     setTimeout(() => {
-        $("#"+colour).removeClass("pressed");
+        $("#" + colour).removeClass("pressed");
     }, 100);
 
 }
 
-$(".btn").click(function(){
+$(".btn").click(function () {
 
     var userChosenColour = $(this).attr("id");
     userChoice.push(userChosenColour);
-    console.log(userChoice);
     animatePress(userChosenColour);
-    check(userChoice.length-1);
+    check(userChoice.length - 1);
+    sound(userChosenColour);
+    console.log(userChosenColour);
 
 })
 
-function check(colour){
+function check(colour) {
 
-    if(userChoice[colour]===gameChoice[colour]){
+    if (userChoice[colour] === gameChoice[colour]) {
         console.log("success");
         if (userChoice.length === gameChoice.length) {
 
@@ -59,13 +60,32 @@ function check(colour){
             }, 1000);
 
         }
-    }else{
+    } else {
         console.log("wrong");
         $("body").addClass("game-over");
         setTimeout(() => {
             $("body").removeClass("game-over");
         }, 100);
+        sound("wrong");
+        $("#level-title").text("Game Over, Press Any Key to Restart");
+        reset();
     }
+
+}
+
+function sound(colour) {
+
+    var audio = new Audio("sounds/" + colour + ".mp3");
+    audio.play();
+
+}
+
+function reset() {
+
+    gameChoice = [];
+    userChoice = [];
+    started = false;
+    level = 0;
 
 }
 
