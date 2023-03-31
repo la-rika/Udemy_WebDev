@@ -1,50 +1,33 @@
-const express = require("express");
-const https = require("https");
-const bodyParser = require("body-parser");
+const express = require('express'); //ottengo express per poterlo utilizzare (framework per creare webapp)
+const https = require('https'); //modulo di node per fre chiamate api
+const app = express(); //utilizzo express
 
-const app = express();
+app.get('/', function(req,res){ //cosa succede quando sono nella home '/'
+    
+    //chiamata di tipo get tramite api url
+    //meteo di Londra
+    const url = 'https://api.openweathermap.org/data/2.5/weather?lat=51.5073219&lon=-0.1276474&units=metric&appid=7f0d1e1ad166f7726dff20cf8f027cd6';
 
-app.use(bodyParser.urlencoded({ extended: true }));
+    //faccio la chiamata api
+    https.get(url, function(response){ //response: dati ottenuti tramite la chiamata api
+        console.log(response ,response.statusCode)
 
-app.get("/", function (req, res) {
+        response.on('data', function(data){ // cio che succede  una volta ottenuti i dati dal api
+            const weatherData = JSON.parse(data) //quando ricevo i dati (data) trasformo tutto in un oggetto javascript
+            const temp = weatherData.main.temp //ottengo il valore di temp (mettere l'url su google e cliccare il campo per copiare il path)
+            const weatherDescription = weatherData.weather[0].description //ottengo il valore di description
+            const icon = weatherData.weather[0].icon // icona del meteo
+            const iconUrl = 'http://openweathermap.org/img/wn/'+icon+'@2x.png' //url per ottenere l'immagine basandomi sul id(icon)
 
-    res.sendFile(__dirname + "/index.html");
-
-    app.post("/", function (req, res) {
-        console.log(req.body.cityName);
-
-        const query = req.body.cityName;
-        const apiKey = "7f0d1e1ad166f7726dff20cf8f027cd6";
-        const units = "metric";
-
-        // link api con i dati
-        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + query + "&units=" + units + "&appid=" + apiKey;
-
-        https.get(apiUrl, function (response) { // metodo get per ottenere i dati del api
-
-            console.log(response.statusCode);
-
-            response.on("data", function (data) { // metodo on per avere il message body dei dati ottenuti con l'api
-                const weatherData = JSON.parse(data); // trasformo in u n file json i dati ottenuti
-                const temp = weatherData.main.temp; // prendo i dati che mi servono come se fosse un oggetto javascript
-                const weatherDescription = weatherData.weather[0].description;
-                const icon = weatherData.weather[0].icon;
-                const imageUrl = "http://openweathermap.org/img/wn/" + icon + "@2x.png"
-
-                res.write("<p>The weather is currently " + weatherDescription + "</p>");
-                res.write("<h1>The temperature in "+ query+" is " + temp + " degrees</h1>");
-                res.write("<img src=" + imageUrl + ">");
-                res.send();
-            })
-
+            //write: permette di fare piu di un send facendo prima tanti write quanti gli elementi che vogliamo visualizzare
+            res.write('<h1>The weather in London is '+temp+' degrees</h1>') //res perche e' cio che visualizziamo  quando siamo nella home
+            res.write('<p>Description: '+weatherDescription+'</p>')
+            res.write('<img src='+iconUrl+'/>')
+            res.send() //infine facciamo un send vuoto
         })
-    })
-
+    }); 
 })
 
-
-
-app.listen(3000, function () {
-    console.log("server started on port 3000");
+app.listen(3000,function(){ //dico a express di startare il server sulla porta 3000
+    console.log('server is running on port 3000') //quello che succede una volta che il server e' partitto
 })
-
