@@ -1,5 +1,5 @@
 const express = require("express"); //ottengo express per poterlo utilizzare (framework per creare webapp)
-const https = require("https"); //modulo di node per fre chiamate api
+const https = require("https"); //modulo di node per fare chiamate api
 const bodyParser = require("body-parser"); //ottengo dati dal html ottenuti con gli input
 
 const app = express(); //utilizzo express
