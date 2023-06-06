@@ -1,15 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>To Do List</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-</head>
-<body>
+<!-- <%= %> : usare le variabili del file js -->
+<!-- <% %> : permette di scirvere js nel file html -->
 
-    <h1>Today is <%= kindOfDay %> </h1>
-    
-</body>
-</html>
+<%- include("header") -%>
+    <div class="box" id="heading">
+        <h1><%= title %></h1>
+    </div>
+
+    <div class="box">
+        <% for(i=0; i <newListItems.length; i++) {%>
+            <div class="item">
+                <input type="checkbox">
+                <p> <%= newListItems[i] %></p>
+            </div>
+            <% } %>
+
+        <form action="/" method="post">
+            <input type="text" placeholder="write something" name="newItem" autocomplete="off">
+            <button type="submit" name="list" value="<%= title %>">+</button>
+        </form>
+    </div>
+<%- include("footer") -%>
+
+        <!-- LE DUE PARTI MANCANTI (INIZIO E FINE) SONO ALL'INTERNO DEI FILE HEADER E FOOTER. IN QUESTO MODO POSSONO ESSERE PIU FACILMENTE 
+RICHIAMATE (include("")) ALL'INTERNO DEI VARI FILE AL POSTO DI CONTINUARE A RISCRIVERLE -->
