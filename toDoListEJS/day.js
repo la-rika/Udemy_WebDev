@@ -12,6 +12,4 @@ function getDay(){
     return day;
 }
 
-export{
-    getDay,
-}
+module.exports = getDay;

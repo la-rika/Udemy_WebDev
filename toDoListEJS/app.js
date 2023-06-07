@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-import { getDay } from "./day";
+const getDay = require(__dirname + "/day.js")
 
 const app = express();
 
