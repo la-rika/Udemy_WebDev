@@ -37,31 +37,38 @@ app.get("/", (req, res) => {
     //visualizzo il file list.ejs (ejs guarda sempre dentro la cartella views per i file)
     //a questo file passo anche la variabile kindOfDay che ha il valore di day (label: value)
     //il file ejs all'intenro del quale usiamo l evariabili e' il ejs template
-    Item.find().then(function(items){
+    Item.find().then((items)=>{
         if(items.length===0){
-            Item.insertMany(defaultItems).then(function(){
+            Item.insertMany(defaultItems).then(()=>{
                 console.log('items successfully saved')
-            }).catch(function(err){
+            }).catch((err)=>{
                 console.log(err)
             })
         }else{
             res.render("list", { title: "today", newListItems: items }) //list: file in cui voglio usare i dati; {}: dati che voglio usare nel file html
         }
-    }).catch(function(err){
+    }).catch((err)=>{
         console.log(err)
     })
 })
 
 app.post("/", (req, res) => {
-    const item = req.body.newItem;
-    if (req.body.list === 'Work List') { //list: valore del bottone che cambia in base al titolo della pagina e quindi alla route
-        workItems.push(item);
-        res.redirect("/work"); //quando avviene la post si e' reindirizzati alla home (get)salvandosi newItem
-    } else {
-        newItems.push(item);
-        res.redirect("/"); 
-    }
+    const itemName = req.body.newItem;
+    const item = new Item({
+        name: itemName
+    })
+    item.save();
+    res.redirect('/')
+})
 
+app.post('/delete', (req,res)=>{
+    const checkedItemId = req.body.checkbox;
+    Item.findByIdAndRemove({ _id: String(checkedItemId) }).then(function () {
+        console.log("Data deleted"); // Success
+        res.redirect("/")
+    }).catch(function (error) {
+        console.log(error); // Failure
+    });
 })
 
 app.get("/work", (req, res) => {
