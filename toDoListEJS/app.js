@@ -30,24 +30,31 @@ const item3 = new Item({
     name: 'love yourself and your company'
 })
 
-const defaultItems = [item1,item2,item3]
+const defaultItems = [item1, item2, item3]
+
+const listSchema = new mongoose.Schema({
+    name: String,
+    items: [itemsSchema]
+})
+
+const List = mongoose.model("List", listSchema)
 
 
 app.get("/", (req, res) => {
     //visualizzo il file list.ejs (ejs guarda sempre dentro la cartella views per i file)
     //a questo file passo anche la variabile kindOfDay che ha il valore di day (label: value)
     //il file ejs all'intenro del quale usiamo l evariabili e' il ejs template
-    Item.find().then((items)=>{
-        if(items.length===0){
-            Item.insertMany(defaultItems).then(()=>{
+    Item.find().then((items) => {
+        if (items.length === 0) {
+            Item.insertMany(defaultItems).then(() => {
                 console.log('items successfully saved')
-            }).catch((err)=>{
+            }).catch((err) => {
                 console.log(err)
             })
-        }else{
+        } else {
             res.render("list", { title: "today", newListItems: items }) //list: file in cui voglio usare i dati; {}: dati che voglio usare nel file html
         }
-    }).catch((err)=>{
+    }).catch((err) => {
         console.log(err)
     })
 })
@@ -61,7 +68,7 @@ app.post("/", (req, res) => {
     res.redirect('/')
 })
 
-app.post('/delete', (req,res)=>{
+app.post('/delete', (req, res) => {
     const checkedItemId = req.body.checkbox;
     Item.findByIdAndRemove({ _id: String(checkedItemId) }).then(function () {
         console.log("Data deleted"); // Success
@@ -71,8 +78,26 @@ app.post('/delete', (req,res)=>{
     });
 })
 
-app.get("/work", (req, res) => {
-    res.render("list", { title: "Work List", newListItems: workItems });
+//in base a cosa metto nel url dopo '/' vado in una nuova pagina
+//dynamic routing
+app.get('/:customList', (req, res) => {
+    const customList = req.params.customList
+
+    List.findOne({ name: customList }).then((result) => {
+        if (result) { //result diverso da undefined
+            res.render("list", { title: result.name, newListItems: result.items }) //list: file in cui voglio usare i dati; {}: dati che voglio usare nel file html
+        } else {
+
+            const list = new List({
+                name: customList,
+                items: defaultItems
+            })
+
+            list.save();
+            setTimeout(() => { res.redirect('/' + customList);}, 2000);
+        }
+    })
+
 })
 
 
