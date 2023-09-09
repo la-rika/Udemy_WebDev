@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const getDay = require(__dirname + "/day.js")
 const mongoose = require('mongoose')
+const _ = require('lodash')
 
 const app = express();
 
@@ -52,7 +53,7 @@ app.get("/", (req, res) => {
                 console.log(err)
             })
         } else {
-            res.render("list", { title: "today", newListItems: items }) //list: file in cui voglio usare i dati; {}: dati che voglio usare nel file html
+            res.render("list", { title: "Today", newListItems: items }) //list: file in cui voglio usare i dati; {}: dati che voglio usare nel file html
         }
     }).catch((err) => {
         console.log(err)
@@ -61,27 +62,50 @@ app.get("/", (req, res) => {
 
 app.post("/", (req, res) => {
     const itemName = req.body.newItem;
+    const listName = req.body.list;
+
     const item = new Item({
         name: itemName
     })
-    item.save();
-    res.redirect('/')
+
+    if(listName === 'Today'){
+        item.save();
+        res.redirect('/')
+    }else{
+        List.findOne({name: listName}).then((foundList)=>{
+            foundList.items.push(item)
+            foundList.save();
+            res.redirect('/'+listName)
+        })
+    }
+
 })
 
 app.post('/delete', (req, res) => {
     const checkedItemId = req.body.checkbox;
-    Item.findByIdAndRemove({ _id: String(checkedItemId) }).then(function () {
-        console.log("Data deleted"); // Success
-        res.redirect("/")
-    }).catch(function (error) {
-        console.log(error); // Failure
-    });
+    const listName = req.body.list;
+    
+    if(listName === 'Today'){
+        Item.findByIdAndRemove({ _id: checkedItemId }).then(function () {
+            res.redirect("/")
+        }).catch(function (error) {
+            console.log(error); // Failure
+        });
+    }else{
+        //nel array items della lista in cui siamo troviamo e eliminiamo l'item con l'id dell'elemento che abbiamo checckato
+        //$pull: elimina un elemento da un array
+        List.findByIdAndUpdate({name: listName}, {$pull:{items:{_id: checkedItemId}}}).then((foundList, err)=>{
+            if(!err){
+                res.redirect('/'+listName)
+            }
+        })
+    }
 })
 
 //in base a cosa metto nel url dopo '/' vado in una nuova pagina
 //dynamic routing
 app.get('/:customList', (req, res) => {
-    const customList = req.params.customList
+    const customList = _.capitalize(req.params.customList) //lodash permette di formattare in un certo modo delle stringhe a prescindere da come vengono scritte dall'utente
 
     List.findOne({ name: customList }).then((result) => {
         if (result) { //result diverso da undefined
@@ -90,7 +114,7 @@ app.get('/:customList', (req, res) => {
 
             const list = new List({
                 name: customList,
-                items: defaultItems
+                items: []
             })
 
             list.save();
