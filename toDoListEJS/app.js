@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const getDay = require(__dirname + "/day.js")
 const mongoose = require('mongoose')
 const _ = require('lodash')
+const srvr = process.env.userName; 
+const srvrCred = process.env.password; 
 
 const app = express();
 
@@ -11,7 +13,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public')) //diciamo ad express dove andare a prendere i file a cui facciamo riferimento (css, img...)
 
-mongoose.connect("mongodb+srv://admin-lara:Adm1inH3r3@udemy-cluster.e18m7ig.mongodb.net/todolistDB", { useNewUrlParser: true });
+mongoose.connect("mongodb+srv://"+srvr+":"+srvrCred+"@udemy-cluster.e18m7ig.mongodb.net/todolistDB", { useNewUrlParser: true });
 
 const itemsSchema = new mongoose.Schema({
     name: String
