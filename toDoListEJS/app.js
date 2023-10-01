@@ -11,7 +11,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public')) //diciamo ad express dove andare a prendere i file a cui facciamo riferimento (css, img...)
 
-mongoose.connect("mongodb://localhost:27017/todolistDB", { useNewUrlParser: true });
+mongoose.connect("mongodb+srv://admin-lara:Adm1inH3r3@udemy-cluster.e18m7ig.mongodb.net/todolistDB", { useNewUrlParser: true });
 
 const itemsSchema = new mongoose.Schema({
     name: String
@@ -68,14 +68,14 @@ app.post("/", (req, res) => {
         name: itemName
     })
 
-    if(listName === 'Today'){
+    if (listName === 'Today') {
         item.save();
         res.redirect('/')
-    }else{
-        List.findOne({name: listName}).then((foundList)=>{
+    } else {
+        List.findOne({ name: listName }).then((foundList) => {
             foundList.items.push(item)
             foundList.save();
-            res.redirect('/'+listName)
+            res.redirect('/' + listName)
         })
     }
 
@@ -84,19 +84,19 @@ app.post("/", (req, res) => {
 app.post('/delete', (req, res) => {
     const checkedItemId = req.body.checkbox;
     const listName = req.body.list;
-    
-    if(listName === 'Today'){
+
+    if (listName === 'Today') {
         Item.findByIdAndRemove({ _id: checkedItemId }).then(function () {
             res.redirect("/")
         }).catch(function (error) {
             console.log(error); // Failure
         });
-    }else{
+    } else {
         //nel array items della lista in cui siamo troviamo e eliminiamo l'item con l'id dell'elemento che abbiamo checckato
         //$pull: elimina un elemento da un array
-        List.findByIdAndUpdate({name: listName}, {$pull:{items:{_id: checkedItemId}}}).then((foundList, err)=>{
-            if(!err){
-                res.redirect('/'+listName)
+        List.findByIdAndUpdate({ name: listName }, { $pull: { items: { _id: checkedItemId } } }).then((foundList, err) => {
+            if (!err) {
+                res.redirect('/' + listName)
             }
         })
     }
@@ -118,13 +118,17 @@ app.get('/:customList', (req, res) => {
             })
 
             list.save();
-            setTimeout(() => { res.redirect('/' + customList);}, 2000);
+            setTimeout(() => { res.redirect('/' + customList); }, 2000);
         }
     })
 
 })
 
 
-app.listen(3000, (req, res) => {
-    console.log("the server is running on port 3000 !");
-})
+let port = process.env.PORT;
+if (port == null || port == "") {
+    port = 8000;
+}
+app.listen(port, ()=>{
+    console.log('server up and running on port '+ port)
+});
