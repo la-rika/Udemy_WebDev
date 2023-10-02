@@ -1,31 +1,36 @@
 <!-- <%= %> : usare le variabili del file js -->
 <!-- <% %> : permette di scirvere js nel file html -->
-
-<%- include("header") -%>
-    <div class="box" id="heading">
-        <h1>
-            <%= title %>
-        </h1>
+<div style="height: 100vh; background-color: rgb(166, 128, 186);width: 100%;">
+    <div style="display: flex; justify-content: center;">
+        <div class="box" id="heading" style="margin-bottom: 7%;">
+            <h1>
+                <%= title %>
+            </h1>
+        </div>
     </div>
 
-    <div class="box">
-        <% newListItems.forEach(item=> {%>
-            <form action="/delete" method="post">
-                <div class="item">
-                    <input type="checkbox" name="checkbox" value="<%=item._id%>" onchange="this.form.submit()">
-                    <p>
-                        <%= item.name %>
-                    </p>
-                </div>
-            </form>
-            <% }) %>
-
-                <form action="/" method="post">
-                    <input type="text" placeholder="write something" name="newItem" autocomplete="off">
-                    <button type="submit" name="list" value="<%= title %>">+</button>
+    <div style="display: flex; justify-content: center;">
+        <div class="box" style="border: 2px solid purple;padding: 3%;width: 25%;border-radius: 8px;background-color: rgb(212, 194, 226);">
+            <% newListItems.forEach(item=> {%>
+                <form action="/delete" method="post">
+                    <div class="item" style="display: flex;">
+                        <input type="checkbox" name="checkbox" value="<%=item._id%>" onchange="this.form.submit()">
+                        <p>
+                            <%= item.name %>
+                        </p>
+                    </div>
                 </form>
-    </div>
-    <%- include("footer") -%>
+                <% }) %>
 
-        <!-- LE DUE PARTI MANCANTI (INIZIO E FINE) SONO ALL'INTERNO DEI FILE HEADER E FOOTER. IN QUESTO MODO POSSONO ESSERE PIU FACILMENTE 
+                    <form action="/" method="post">
+                        <input type="text" placeholder="write something" name="newItem" autocomplete="off">
+                        <button type="submit" name="list" value="<%= title %>">+</button>
+                    </form>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- LE DUE PARTI MANCANTI (INIZIO E FINE) SONO ALL'INTERNO DEI FILE HEADER E FOOTER. IN QUESTO MODO POSSONO ESSERE PIU FACILMENTE 
 RICHIAMATE (include("")) ALL'INTERNO DEI VARI FILE AL POSTO DI CONTINUARE A RISCRIVERLE -->

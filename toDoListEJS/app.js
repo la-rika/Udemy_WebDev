@@ -1,16 +1,20 @@
+require("dotenv").config(); //express non legge da solo gli .env e gli serve questo
 const express = require("express");
 const bodyParser = require("body-parser");
-const getDay = require(__dirname + "/day.js")
+// const getDay = require(__dirname + "/day.js")
 const mongoose = require('mongoose')
+const uri = process.env.URI;
 
 const app = express();
 
 //settaggio per utilizzare ejs
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public')) //diciamo ad express dove andare a prendere i file a cui facciamo riferimento (css, img...)
+app.use(express.static(__dirname+'/public')) //diciamo ad express dove andare a prendere i file a cui facciamo riferimento (css, img...)
 
-mongoose.connect("mongodb://localhost:27017/todolistDB", { useNewUrlParser: true });
+
+mongoose.connect(uri, { useNewUrlParser: true });
+
 
 const itemsSchema = new mongoose.Schema({
     name: String
@@ -94,7 +98,7 @@ app.get('/:customList', (req, res) => {
             })
 
             list.save();
-            setTimeout(() => { res.redirect('/' + customList);}, 2000);
+            setTimeout(() => { res.redirect('/' + customList); }, 2000);
         }
     })
 
