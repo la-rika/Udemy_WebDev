@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname+'/public')) //diciamo ad express dove andare a prendere i file a cui facciamo riferimento (css, img...)
 
 
-mongoose.connect(uri, { useNewUrlParser: true });
+mongoose.connect("mongodb+srv://admin-lara:Adm1inH3r3@udemy-cluster.e18m7ig.mongodb.net/todolistDB", { useNewUrlParser: true });
 
 
 const itemsSchema = new mongoose.Schema({
