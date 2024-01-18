@@ -15,7 +15,7 @@ app.get('/random',(req,res)=>{
 
 //2. GET a specific joke
 app.get("/jokes/:id",(req,res)=>{
-  const id = req.params.id //prendo gli url params 
+  const id = req.params.id //prendo gli url params (path variables)
   const foundJoke = jokes.find(el=>el.id ==id)
   res.json(foundJoke)
 })
@@ -31,21 +31,60 @@ app.get("/filter", (req,res)=>{
 app.post("/jokes",(req,res)=>{
   const newJoke = {
     id: jokes.length+1,
-    jokeText: req.body.text, //prendi i body params
+    jokeText: req.body.text, //prendi i body params (x-www-format-urlencoded)
     jokeType: req.body.type
   }
 
-  jokes.push(newJoke);
+  jokes.push(newJoke); //aggiungo la battuta al array 
   res.json(newJoke)
 })
 
-//5. PUT a joke
+//5. PUT a joke, bisogna mandare tutti i campi anche se non si vogliono modificare 
+app.put("/jokes/:id", (req,res)=>{
+  const updatedJoke={
+    id: req.params.id,
+    jokeText: req.body.text,
+    jokeType: req.body.type
+  }
 
-//6. PATCH a joke
+  const index = jokes.findIndex(el=>el.id == req.params.id); //cerco la battuta corrispondente all'indice passato 
+  jokes[index] = updatedJoke; // modifico la battuta corrispondente a quell'indice 
+  res.json( jokes[index])
+})
+
+//6. PATCH a joke, si mandano solo ii campi che si vogliono modificare. Il resto rimarra' com'e'
+app.patch("/jokes/:id", (req,res)=>{
+  const index = jokes.findIndex(el=>el.id == req.params.id); //cerco la battuta corrispondente all'indice passato 
+  const updatedJoke={
+    id: req.params.id,
+    jokeText: req.body.text||jokes[index].jokeText, //in questo modo se il valore viene cambiato da chi fa la chiamata bona 
+    jokeType: req.body.type||jokes[index].jokeType  //senno' viene tenuto quello che c'era
+  }
+  jokes[index] = updatedJoke; // modifico la battuta corrispondente a quell'indice 
+  res.json( jokes[index])
+})
 
 //7. DELETE Specific joke
+app.delete("/jokes/:id", (req,res)=>{
+  const index = jokes.findIndex(el=>el.id == req.params.id); //cerco la battuta corrispondente all'indice passato 
+  if(index>-1){
+    jokes.splice(index,1) //elimino sono 1 elemento a partire dal index (modifica direttamente l'array originale)
+    res.sendStatus(200) //appare la scritta "ok"
+  }else[
+    res.status(404).json('joke not found')
+  ]
+})
 
 //8. DELETE All jokes
+app.delete('/all',(req,res)=>{
+  const apiKey = req.query.key;
+  if(apiKey === masterKey){
+    jokes = [];
+    res.sendStatus(200);
+  }else{
+    res.status(404).json('u not authorised to perform this action gneh')
+  }
+})
 
 app.listen(port, () => {
   console.log(`Successfully started server on port ${port}.`);
