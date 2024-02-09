@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import pg from "pg";
+import pg from "pg"; //pg serve per connettersi al DB
 
 const app = express();
 const port = 3000;
